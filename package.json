@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "publishing tool for your node projects hosted on github",
   "main": "lib/index.js",
+  "bin": "./bin/npub",
   "dependencies": {
     "globber": "~0.1.2"
   },
