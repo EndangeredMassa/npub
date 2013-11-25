@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "publishing tool for your node projects hosted on github",
   "main": "lib/index.js",
-  "dependencies": {},
+  "dependencies": {
+    "globber": "~0.1.2"
+  },
   "devDependencies": {
     "coffee-script-redux": "2.0.0-beta7",
     "mocha": "~1.12.1",

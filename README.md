@@ -1,32 +1,20 @@
-# Project Name
+# npub
 
-Project Description
-
-
-
-## Install
-
-    npm install --save project-name
+## npub prep
 
 
 
-## Usage
-
-### CLI
-
-    $ bin/binary-name --help
-
-#### Example:
-
-### Module Interface
-
-#### `exportedFunction(args)` → Return Value
-Description
 
 
 
-## Examples
 
-### CLI example
+## npub publish
 
-### Module Example
+
+
+
+
+
+
+
+
