@@ -10,8 +10,8 @@ SOURCE_FILES = {
     endComment: '*/'
 }
 
-module.exports = addLicense = (dir, license) ->
-  files = getSourceFiles(dir)
+module.exports = addLicense = (dir, license, config={}) ->
+  files = getSourceFiles(dir, config.exclude)
 
   for file in files
     ensureLicense file, license
@@ -23,12 +23,9 @@ readFile = (filePath) ->
 getExtension = (path) ->
   path.split('.').pop()
 
-getSourceFiles = (dir) ->
+getSourceFiles = (dir, exclude=[]) ->
   options =
-    exclude: [
-      'node_modules'
-      'test'
-    ]
+    exclude: ['node_modules'].concat(exclude)
     recursive: true
     includeDirectories: false
 

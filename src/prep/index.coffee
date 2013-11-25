@@ -5,8 +5,8 @@ readFile = (filePath) ->
   buffer = fs.readFileSync filePath
   buffer.toString()
 
-module.exports = (dir) ->
-  license = readFile "#{dir}/LICENSE"
+module.exports = (dir, workingDir, config) ->
+  license = readFile "#{workingDir}/LICENSE"
   if license?
-    addLicense(dir, license)
+    addLicense(dir, license, config?.license)
 
