@@ -5,6 +5,9 @@ SOURCE_FILES = {
   'coffee':
     startComment: '###'
     endComment: '###'
+  'js':
+    startComment: '/*'
+    endComment: '*/'
 }
 
 module.exports = addLicense = (dir, license) ->
