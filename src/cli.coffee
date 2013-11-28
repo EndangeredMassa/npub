@@ -2,6 +2,9 @@ npub = require './index'
 
 cli = (command, option, directory, config) ->
   if command == 'prep'
+    if !option?
+      console.log '<version> required for command: prep'
+      process.exit(2)
     return npub.prep(directory, option, config)
   if command == 'publish'
     return npub.publish(directory, config)

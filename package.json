@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "bin": "./bin/npub",
   "dependencies": {
-    "globber": "~0.1.2"
+    "globber": "~0.1.2",
+    "semver": "~2.2.1"
   },
   "devDependencies": {
     "coffee-script-redux": "2.0.0-beta7",
