@@ -1,12 +1,11 @@
-fs = require 'fs'
+bumpVersion = require './version'
+shrinkwrap = require './shrinkwrap'
 addLicense = require './license'
+updateChangelog = require './changelog'
 
-readFile = (filePath) ->
-  buffer = fs.readFileSync filePath
-  buffer.toString()
-
-module.exports = (dir, workingDir, config) ->
-  license = readFile "#{workingDir}/LICENSE"
-  if license?
-    addLicense(dir, license, config?.license)
+module.exports = (directory, version, config={}) ->
+  bumpVersion(version)
+  shrinkwrap()
+  addLicense(directory, config.license)
+  updateChangelog(version)
 

@@ -1,23 +1,24 @@
 npub = require './index'
 
-cli = (command, dir, cwd, config) ->
+cli = (command, option, directory, config) ->
   if command == 'prep'
-    return npub.prep(dir, cwd, config)
+    return npub.prep(directory, option, config)
   if command == 'publish'
-    return npub.publish(dir, cwd, config)
+    return npub.publish(directory, config)
 
   console.log "invalid command: #{command}"
 
 command = process.argv[2]
-cwd = process.cwd()
-directory = process.argv[3] || cwd
+option = process.argv[3]
+directory = process.cwd()
 
-config = (require "#{cwd}/package.json").publishConfig
-delete config.registry
-delete config.tag
+config = (require "#{directory}/package.json").publishConfig
+if config?
+  delete config.registry
+  delete config.tag
 
 if !command?
   console.log 'command required'
   process.exit(1)
 
-cli(command, directory, cwd, config)
+cli(command, option, directory, config)
