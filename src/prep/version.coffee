@@ -1,5 +1,6 @@
 fs = require 'fs'
 semver = require 'semver'
+log = require '../log'
 
 getNextVersion = (currentVersion, versionOption) ->
   if versionOption.indexOf('.') > -1
@@ -21,5 +22,6 @@ module.exports = (directory, versionOption) ->
   packageJson.version = nextVersion
   write packagePath, packageJson
 
-  console.log "Updated package to #{nextVersion}"
+  log "updated package to #{nextVersion}"
+  return nextVersion
 

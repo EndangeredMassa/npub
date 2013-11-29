@@ -1,5 +1,6 @@
 fs = require 'fs'
 glob = require 'globber'
+log = require '../log'
 
 SOURCE_FILES = {
   'coffee':
@@ -50,7 +51,7 @@ ensureLicense = (file, license) ->
   license = startComment + newline + license + endComment + newline + newline
 
   if file.content.indexOf(license) != 0
-    console.log "#{file.path}: adding license"
+    log "#{file.path}: adding license"
     prepend file, license
 
 prepend = (file, license) ->

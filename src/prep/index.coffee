@@ -4,8 +4,8 @@ addLicense = require './license'
 updateChangelog = require './changelog'
 
 module.exports = (directory, version, config={}) ->
-  bumpVersion(directory, version)
-  shrinkwrap()
-  addLicense(directory, config.license)
-  updateChangelog(version)
+  nextVersion = bumpVersion(directory, version)
+  shrinkwrap directory, ->
+    addLicense(directory, config.license)
+    updateChangelog(nextVersion)
 
