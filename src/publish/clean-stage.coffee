@@ -30,6 +30,11 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ###
 
+git = require './git'
 
-module.exports = (message) ->
-  console.log "[npub] #{message}"
+module.exports = (dir, callback) ->
+  git.isClean dir, (isClean) ->
+    if !isClean
+      throw new Error "git status at #{dir} is not clean"
+    callback()
+

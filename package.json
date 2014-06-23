@@ -7,7 +7,9 @@
   "dependencies": {
     "globber": "~0.1.2",
     "semver": "~2.2.1",
-    "temp": "~0.6.0"
+    "temp": "~0.6.0",
+    "mkdirp": "^0.5.0",
+    "editor": "^0.1.0"
   },
   "devDependencies": {
     "coffee-script-redux": "2.0.0-beta7",
