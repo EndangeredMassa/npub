@@ -10,16 +10,18 @@ module.exports = (dir, version, config) ->
   ensureCleanStage dir, ->
     license(dir, config)
     ensureCleanStage dir, ->
-      #TODO: verification step: "npm test"
+      # TODO: verification step: "npm test"
       changelog.build dir, (tempChangelog) ->
         tempChangelogPath = changelog.write(tempChangelog)
         openEditor tempChangelogPath, ->
           changelog.update(dir, tempChangelogPath)
           updateVersion(dir, version)
+          # TODO: confirm: "publish?"
+          # TODO: npm publish
           commitChanges dir, version, ->
             git.tag dir, "v#{version}", ->
               console.log 'tagged!'
-              #TODO: git push
-              #TODO: github release notes
-              #TODO: github PR comments
+              # TODO: git push
+              # TODO: github release notes
+              # TODO: github PR comments
 
