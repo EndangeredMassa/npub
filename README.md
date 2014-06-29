@@ -18,3 +18,7 @@ http://massalabs.com/dev/2013/10/13/managing-a-project.html
 - use `npm version`
 - update changelog based on PRs since release
 - update PRs post publish with version number and link to change log
+
+# license
+
+[MIT](LICENSE)
