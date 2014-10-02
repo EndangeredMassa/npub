@@ -14,14 +14,19 @@ module.exports = (dir, version, config) ->
       changelog.build dir, (tempChangelog) ->
         tempChangelogPath = changelog.write(tempChangelog)
         openEditor tempChangelogPath, ->
+          # TODO: on non-zero exit code: remove tmp changelog and exit
           changelog.update(dir, tempChangelogPath)
           updateVersion(dir, version)
-          # TODO: confirm: "publish?"
-          # TODO: npm publish
           commitChanges dir, version, ->
             git.tag dir, "v#{version}", ->
               console.log 'tagged!'
+
+              # TODO: confirm: "publish?"
               # TODO: git push
+              # TODO: git push tag
+              # TODO: npm publish
+
+              # FUTURE
               # TODO: github release notes
               # TODO: github PR comments
 
