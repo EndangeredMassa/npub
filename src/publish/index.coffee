@@ -1,3 +1,4 @@
+fs = require 'fs'
 license = require './license'
 ensureCleanStage = require './clean-stage'
 changelog = require './changelog'
@@ -6,7 +7,7 @@ updateVersion = require './version'
 commitChanges = require './commit-changes'
 test = require './test'
 git = require './git'
-fs = require 'fs'
+prompt = require './prompt'
 
 endIf = (exitCodeOrError, message) ->
   return unless exitCodeOrError?
@@ -42,14 +43,17 @@ module.exports = (dir, version, config) ->
             updateVersion(dir, version)
             commitChanges dir, version, ->
               git.tag dir, "v#{version}", ->
-                console.log 'tagged!'
+                prompt version, (error) ->
+                  endIf(error)
 
-                # TODO: confirm: "publish?"
-                # TODO: git push
-                # TODO: git push tag
-                # TODO: npm publish
+                  console.log 'success!'
 
-                # FUTURE
-                # TODO: github release notes
-                # TODO: github PR comments
+                  # TODO: confirm: "publish?"
+                  # TODO: git push
+                  # TODO: git push tag
+                  # TODO: npm publish
+
+                  # FUTURE
+                  # TODO: github release notes
+                  # TODO: github PR comments
 
