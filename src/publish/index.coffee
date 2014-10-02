@@ -21,37 +21,69 @@ endIf = (exitCodeOrError, message) ->
     console.error "[npub] " + message
     process.exit(exitCodeOrError)
 
+debug = (message) ->
+  # TODO: pull in node-debug?
+  console.log '!%!%', message
+
 module.exports = (dir, version, config) ->
   ensureCleanStage dir, (error) ->
     endIf(error)
 
     license(dir, config)
+    debug 'ensured license headers'
+
     ensureCleanStage dir, (error) ->
       endIf(error)
 
       npm.test dir, (error) ->
         endIf(error)
 
-        changelog.build dir, (tempChangelog) ->
+        debug 'ran: npm test'
+
+        changelog.build dir, (error, tempChangelog) ->
+          endIf(error)
+
           tempChangelogPath = changelog.write(tempChangelog)
+          debug "temp changelog at: #{tempChangelogPath}"
+
           openEditor tempChangelogPath, (error) ->
             if error?
               fs.unlinkSync tempChangelogPath
               endIf(error)
 
             changelog.update(dir, tempChangelogPath)
+            debug "updated changelog"
+
             updateVersion(dir, version)
+            debug "updated version"
+
             commitChanges dir, version, ->
+              debug 'changes committed'
+
               tag = "v#{version}"
-              git.tag dir, tag, ->
+
+              git.tag dir, tag, (error) ->
+                endIf(error)
+
+                debug "tagged: #{tag}"
+
                 prompt version, (error) ->
                   endIf(error)
 
-                  git.push dir, ->
-                    git.pushTag dir, tag, ->
+                  git.push dir, (error) ->
+                    endIf(error)
+
+                    debug "git pushed"
+
+                    git.pushTag dir, tag, (error) ->
+                      endIf(error)
+
+                      debug "git tag \"#{tag}\" pushed"
 
                       npm.publish dir, (error) ->
                         endIf(error)
+
+                        debug "published"
 
                         console.log 'success!'
 
