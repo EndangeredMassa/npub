@@ -4,29 +4,51 @@ changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
+test = require './test'
 git = require './git'
 
+endIf = (exitCodeOrError, message) ->
+  return unless exitCodeOrError?
+
+  if exitCodeOrError instanceof Error
+    console.error "[npub] " + exitCodeOrError.message
+    process.exit(1)
+  else
+    return if exitCodeOrError == 0
+    message ?= "exited with #{exitCodeOrError}"
+    console.error "[npub] " + message
+    process.exit(exitCodeOrError)
+
 module.exports = (dir, version, config) ->
-  ensureCleanStage dir, ->
+  ensureCleanStage dir, (error) ->
+    endIf(error)
+
     license(dir, config)
-    ensureCleanStage dir, ->
-      # TODO: verification step: "npm test"
-      changelog.build dir, (tempChangelog) ->
-        tempChangelogPath = changelog.write(tempChangelog)
-        openEditor tempChangelogPath, ->
-          # TODO: on non-zero exit code: remove tmp changelog and exit
-          changelog.update(dir, tempChangelogPath)
-          updateVersion(dir, version)
-          commitChanges dir, version, ->
-            git.tag dir, "v#{version}", ->
-              console.log 'tagged!'
+    ensureCleanStage dir, (error) ->
+      endIf(error)
 
-              # TODO: confirm: "publish?"
-              # TODO: git push
-              # TODO: git push tag
-              # TODO: npm publish
+      test dir, (error) ->
+        endIf(error)
 
-              # FUTURE
-              # TODO: github release notes
-              # TODO: github PR comments
+        changelog.build dir, (tempChangelog) ->
+          tempChangelogPath = changelog.write(tempChangelog)
+          openEditor tempChangelogPath, (error) ->
+            if error?
+              # TODO: rm temp changelog
+              endIf(error)
+
+            changelog.update(dir, tempChangelogPath)
+            updateVersion(dir, version)
+            commitChanges dir, version, ->
+              git.tag dir, "v#{version}", ->
+                console.log 'tagged!'
+
+                # TODO: confirm: "publish?"
+                # TODO: git push
+                # TODO: git push tag
+                # TODO: npm publish
+
+                # FUTURE
+                # TODO: github release notes
+                # TODO: github PR comments
 

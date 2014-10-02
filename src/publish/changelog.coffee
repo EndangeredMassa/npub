@@ -1,6 +1,7 @@
 git = require './git'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
+touch = require 'touch'
 
 module.exports =
   build: (dir, callback) ->
@@ -8,13 +9,16 @@ module.exports =
     git.diffSinceLastTag dir, callback
 
   write: (changelog, filePath='/tmp/npub/changelog.md') ->
+    # TODO: use library to create temp file
     mkdirp.sync '/tmp/npub'
     fs.writeFileSync filePath, changelog
     filePath
 
   update: (dir, filePath) ->
+    changelogPath = "#{dir}/CHANGELOG.md"
+    touch.sync changelogPath
     newChangelog = fs.readFileSync filePath
-    currentChangelog = fs.readFileSync "#{dir}/CHANGELOG.md"
+    currentChangelog = fs.readFileSync changelogPath
     newChangelog += currentChangelog
-    @write newChangelog, "#{dir}/CHANGELOG.md"
+    @write newChangelog, changelogPath
 
