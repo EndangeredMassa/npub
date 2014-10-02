@@ -23,3 +23,14 @@ module.exports =
       throw error if error?
       callback()
 
+  push: (dir, callback) ->
+    gitCommand dir, "push", (error, stdout, stderror) ->
+      throw error if error?
+      callback()
+
+  pushTag: (dir, tag, callback) ->
+    remote = 'origin'
+    gitCommand dir, "push #{remote} tag #{tag}", (error, stdout, stderror) ->
+      throw error if error?
+      callback()
+

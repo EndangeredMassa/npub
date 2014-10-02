@@ -5,7 +5,7 @@ changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
-test = require './test'
+npm = require './npm'
 git = require './git'
 prompt = require './prompt'
 
@@ -29,7 +29,7 @@ module.exports = (dir, version, config) ->
     ensureCleanStage dir, (error) ->
       endIf(error)
 
-      test dir, (error) ->
+      npm.test dir, (error) ->
         endIf(error)
 
         changelog.build dir, (tempChangelog) ->
@@ -42,18 +42,19 @@ module.exports = (dir, version, config) ->
             changelog.update(dir, tempChangelogPath)
             updateVersion(dir, version)
             commitChanges dir, version, ->
-              git.tag dir, "v#{version}", ->
+              tag = "v#{version}"
+              git.tag dir, tag, ->
                 prompt version, (error) ->
                   endIf(error)
 
-                  console.log 'success!'
+                  git.push dir, ->
+                    git.pushTag dir, tag, ->
 
-                  # TODO: confirm: "publish?"
-                  # TODO: git push
-                  # TODO: git push tag
-                  # TODO: npm publish
+                      npm.publish dir, (error) ->
+                        endIf(error)
 
-                  # FUTURE
-                  # TODO: github release notes
-                  # TODO: github PR comments
+                        console.log 'success!'
+
+                        # TODO: github release notes
+                        # TODO: github PR comments
 
