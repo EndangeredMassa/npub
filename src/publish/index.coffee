@@ -6,6 +6,7 @@ updateVersion = require './version'
 commitChanges = require './commit-changes'
 test = require './test'
 git = require './git'
+fs = require 'fs'
 
 endIf = (exitCodeOrError, message) ->
   return unless exitCodeOrError?
@@ -34,7 +35,7 @@ module.exports = (dir, version, config) ->
           tempChangelogPath = changelog.write(tempChangelog)
           openEditor tempChangelogPath, (error) ->
             if error?
-              # TODO: rm temp changelog
+              fs.unlinkSync tempChangelogPath
               endIf(error)
 
             changelog.update(dir, tempChangelogPath)

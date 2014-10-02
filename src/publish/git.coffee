@@ -19,7 +19,6 @@ module.exports =
       callback(stdout)
 
   tag: (dir, tag, callback) ->
-    console.log 'tagging?'
     gitCommand dir, "tag -a #{tag} -m #{tag}", (error, stdout, stderror) ->
       throw error if error?
       callback()
