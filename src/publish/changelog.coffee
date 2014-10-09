@@ -5,13 +5,13 @@ touch = require 'touch'
 
 module.exports =
   build: (dir, callback) ->
-    # TODO: format the changelog
+    # TODO: switch to PR messages and links
     git.diffSinceLastTag dir, callback
 
-  write: (changelog, filePath='/tmp/npub/changelog.md') ->
+  write: (dir, changelog, filePath='/tmp/npub/changelog.md') ->
     # TODO: use library to create temp file
     mkdirp.sync '/tmp/npub'
-    fs.writeFileSync filePath, changelog
+    fs.writeFileSync filePath, changelog, {flag: 'w'}
     filePath
 
   update: (dir, filePath) ->
@@ -20,5 +20,5 @@ module.exports =
     newChangelog = fs.readFileSync filePath
     currentChangelog = fs.readFileSync changelogPath
     newChangelog += currentChangelog
-    @write newChangelog, changelogPath
+    @write dir, newChangelog, changelogPath
 

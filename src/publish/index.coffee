@@ -43,7 +43,7 @@ module.exports = (dir, version, config) ->
         changelog.build dir, (error, tempChangelog) ->
           endIf(error)
 
-          tempChangelogPath = changelog.write(tempChangelog)
+          tempChangelogPath = changelog.write(dir, tempChangelog)
           debug "temp changelog at: #{tempChangelogPath}"
 
           openEditor tempChangelogPath, (error) ->
