@@ -23,7 +23,7 @@ endIf = (exitCodeOrError, message) ->
 
 debug = (message) ->
   # TODO: pull in node-debug?
-  console.log '!%!%', message
+  # console.log '!%!%', message
 
 module.exports = (dir, version, config) ->
   ensureCleanStage dir, (error) ->
