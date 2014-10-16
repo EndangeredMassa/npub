@@ -1,35 +1,32 @@
 {exec} = require 'child_process'
 
-gitCommand = (dir, command, callback) ->
+module.exports = (dir) ->
   options = { cwd: dir }
-  exec "git " + command, options, callback
 
-module.exports =
-  isClean: (dir, callback) ->
-    gitCommand dir, 'diff --exit-code', (error, stdout, stderror) ->
+  isClean: (callback) ->
+    exec 'git diff --exit-code', options, (error, stdout, stderror) ->
       callback(!error)
 
-  commit: (dir, message, callback) ->
-    gitCommand dir, "add --all ; git commit -m '#{message}'", (error, stdout, stderror) ->
+  commit: (message, callback) ->
+    exec "git add --all ; git commit -m '#{message}'", options, (error, stdout, stderror) ->
       callback(!error)
 
-  diffSinceLastTag: (dir, callback) ->
-    gitCommand dir, "log --oneline $(git describe --tags --abbrev=0)..HEAD", (error, stdout, stderr) ->
+  diffSinceLastTag: (callback) ->
+    exec "git log --oneline $(git describe --tags --abbrev=0)..HEAD", options, (error, stdout, stderr) ->
       callback(error, stdout)
 
-  tag: (dir, tag, callback) ->
-    gitCommand dir, "tag -a #{tag} -m #{tag}", (error, stdout, stderror) ->
+  tag: (tag, callback) ->
+    exec "git tag -a #{tag} -m #{tag}", options, (error, stdout, stderror) ->
       return callback(error) if error?
       callback()
 
-  push: (dir, callback) ->
-    gitCommand dir, "push", (error, stdout, stderror) ->
+  push: (callback) ->
+    exec "git push", options, (error, stdout, stderror) ->
       return callback(error) if error?
       callback()
 
-  pushTag: (dir, tag, callback) ->
-    remote = 'origin'
-    gitCommand dir, "push #{remote} tag #{tag}", (error, stdout, stderror) ->
+  pushTag: (tag, callback) ->
+    exec "git push origin tag #{tag}", options, (error, stdout, stderror) ->
       return callback(error) if error?
       callback()
 

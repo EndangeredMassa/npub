@@ -6,7 +6,7 @@ openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
 npm = require './npm'
-git = require './git'
+Git = require './git'
 prompt = require './prompt'
 
 endIf = (exitCodeOrError, message) ->
@@ -26,6 +26,8 @@ debug = (message) ->
   # console.log '!%!%', message
 
 module.exports = (dir, version, config) ->
+  git = Git(dir)
+
   ensureCleanStage dir, (error) ->
     endIf(error)
 
@@ -62,7 +64,7 @@ module.exports = (dir, version, config) ->
 
               tag = "v#{version}"
 
-              git.tag dir, tag, (error) ->
+              git.tag tag, (error) ->
                 endIf(error)
 
                 debug "tagged: #{tag}"
@@ -70,12 +72,12 @@ module.exports = (dir, version, config) ->
                 prompt version, (error) ->
                   endIf(error)
 
-                  git.push dir, (error) ->
+                  git.push (error) ->
                     endIf(error)
 
                     debug "git pushed"
 
-                    git.pushTag dir, tag, (error) ->
+                    git.pushTag tag, (error) ->
                       endIf(error)
 
                       debug "git tag \"#{tag}\" pushed"
