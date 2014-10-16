@@ -8,7 +8,7 @@ module.exports =
     # TODO: switch to PR messages and links
     git.diffSinceLastTag dir, callback
 
-  write: (dir, changelog, filePath='/tmp/npub/changelog.md') ->
+  write: (changelog, filePath='/tmp/npub/changelog.md') ->
     # TODO: use library to create temp file
     mkdirp.sync '/tmp/npub'
     fs.writeFileSync filePath, changelog, {flag: 'w'}
