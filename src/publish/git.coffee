@@ -17,15 +17,16 @@ module.exports = (dir) ->
 
   tag: (tag, callback) ->
     exec "git tag -a #{tag} -m #{tag}", options, (error, stdout, stderror) ->
-      return callback(error) if error?
-      callback()
+      callback(error)
 
-  push: (callback) ->
-    exec "git push", options, (error, stdout, stderror) ->
-      return callback(error) if error?
-      callback()
+  branch: (callback) ->
+    exec "git rev-parse --abbrev-ref HEAD", options, (err, stdout, stderr) ->
+      callback(error, stdout)
+
+  push: (branch, callback) ->
+    exec "git push origin #{branch}", options, (error, stdout, stderror) ->
+      callback(error)
 
   pushTag: (tag, callback) ->
     exec "git push origin tag #{tag}", options, (error, stdout, stderror) ->
-      return callback(error) if error?
-      callback()
+      callback(error)
