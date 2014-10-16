@@ -3,8 +3,8 @@ fs = require 'fs'
 mkdirp = require 'mkdirp'
 touch = require 'touch'
 
-module.exports =
-  build: (dir, callback) ->
+module.exports = (dir) ->
+  build: (callback) ->
     # TODO: switch to PR messages and links
     git.diffSinceLastTag dir, callback
 
@@ -14,7 +14,7 @@ module.exports =
     fs.writeFileSync filePath, changelog, {flag: 'w'}
     filePath
 
-  update: (dir, filePath) ->
+  update: (filePath) ->
     changelogPath = "#{dir}/CHANGELOG.md"
     touch.sync changelogPath
     newChangelog = fs.readFileSync filePath

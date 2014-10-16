@@ -1,7 +1,7 @@
 fs = require 'fs'
 license = require './license'
 ensureCleanStage = require './clean-stage'
-changelog = require './changelog'
+Changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
@@ -28,6 +28,7 @@ debug = (message) ->
 module.exports = (dir, version, config) ->
   git = Git(dir)
   npm = Npm(dir)
+  changelog = Changelog(dir)
 
   ensureCleanStage dir, (error) ->
     endIf(error)
@@ -43,7 +44,7 @@ module.exports = (dir, version, config) ->
 
         debug 'ran: npm test'
 
-        changelog.build dir, (error, tempChangelog) ->
+        changelog.build (error, tempChangelog) ->
           endIf(error)
 
           tempChangelogPath = changelog.write(tempChangelog)
@@ -54,7 +55,7 @@ module.exports = (dir, version, config) ->
               fs.unlinkSync tempChangelogPath
               endIf(error)
 
-            changelog.update(dir, tempChangelogPath)
+            changelog.update(tempChangelogPath)
             debug "updated changelog"
 
             updateVersion(dir, version)

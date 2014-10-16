@@ -29,4 +29,3 @@ module.exports = (dir) ->
     exec "git push origin tag #{tag}", options, (error, stdout, stderror) ->
       return callback(error) if error?
       callback()
-
