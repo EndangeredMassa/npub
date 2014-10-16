@@ -5,7 +5,7 @@ changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
-npm = require './npm'
+Npm = require './npm'
 Git = require './git'
 prompt = require './prompt'
 
@@ -27,6 +27,7 @@ debug = (message) ->
 
 module.exports = (dir, version, config) ->
   git = Git(dir)
+  npm = Npm(dir)
 
   ensureCleanStage dir, (error) ->
     endIf(error)
@@ -37,7 +38,7 @@ module.exports = (dir, version, config) ->
     ensureCleanStage dir, (error) ->
       endIf(error)
 
-      npm.test dir, (error) ->
+      npm.test (error) ->
         endIf(error)
 
         debug 'ran: npm test'
@@ -82,7 +83,7 @@ module.exports = (dir, version, config) ->
 
                       debug "git tag \"#{tag}\" pushed"
 
-                      npm.publish dir, (error) ->
+                      npm.publish (error) ->
                         endIf(error)
 
                         debug "published"
