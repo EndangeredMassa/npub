@@ -1,12 +1,12 @@
 fs = require 'fs'
 license = require './license'
 ensureCleanStage = require './clean-stage'
-changelog = require './changelog'
+Changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
-npm = require './npm'
-git = require './git'
+Npm = require './npm'
+Git = require './git'
 prompt = require './prompt'
 
 endIf = (exitCodeOrError, message) ->
@@ -26,24 +26,28 @@ debug = (message) ->
   # console.log '!%!%', message
 
 module.exports = (dir, version, config) ->
-  ensureCleanStage dir, (error) ->
+  git = Git(dir)
+  npm = Npm(dir)
+  changelog = Changelog(dir, git)
+
+  ensureCleanStage git, (error) ->
     endIf(error)
 
     license(dir, config)
     debug 'ensured license headers'
 
-    ensureCleanStage dir, (error) ->
+    ensureCleanStage git, (error) ->
       endIf(error)
 
-      npm.test dir, (error) ->
+      npm.test (error) ->
         endIf(error)
 
         debug 'ran: npm test'
 
-        changelog.build dir, (error, tempChangelog) ->
+        changelog.build (error, tempChangelog) ->
           endIf(error)
 
-          tempChangelogPath = changelog.write(dir, tempChangelog)
+          tempChangelogPath = changelog.write(tempChangelog)
           debug "temp changelog at: #{tempChangelogPath}"
 
           openEditor tempChangelogPath, (error) ->
@@ -51,18 +55,18 @@ module.exports = (dir, version, config) ->
               fs.unlinkSync tempChangelogPath
               endIf(error)
 
-            changelog.update(dir, tempChangelogPath)
+            changelog.update(tempChangelogPath)
             debug "updated changelog"
 
             updateVersion(dir, version)
             debug "updated version"
 
-            commitChanges dir, version, ->
+            commitChanges git, version, ->
               debug 'changes committed'
 
               tag = "v#{version}"
 
-              git.tag dir, tag, (error) ->
+              git.tag tag, (error) ->
                 endIf(error)
 
                 debug "tagged: #{tag}"
@@ -70,23 +74,28 @@ module.exports = (dir, version, config) ->
                 prompt version, (error) ->
                   endIf(error)
 
-                  git.push dir, (error) ->
+                  git.branch (error, branch) ->
                     endIf(error)
 
-                    debug "git pushed"
+                    debug "git branch: #{branch}"
 
-                    git.pushTag dir, tag, (error) ->
+                    git.push branch, (error) ->
                       endIf(error)
 
-                      debug "git tag \"#{tag}\" pushed"
+                      debug "git pushed"
 
-                      npm.publish dir, (error) ->
+                      git.pushTag tag, (error) ->
                         endIf(error)
 
-                        debug "published"
+                        debug "git tag \"#{tag}\" pushed"
 
-                        console.log 'success!'
+                        npm.publish (error) ->
+                          endIf(error)
 
-                        # TODO: github release notes
-                        # TODO: github PR comments
+                          debug "published"
+
+                          console.log 'success!'
+
+                          # TODO: github release notes
+                          # TODO: github PR comments
 

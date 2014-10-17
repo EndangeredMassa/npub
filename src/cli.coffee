@@ -1,9 +1,9 @@
 npub = require './index'
 
 cli = (command, option, directory, config) ->
-  if command == 'version'
+  if command == 'publish'
     if !option?
-      console.log '<version> required for command: npub version <version>'
+      console.log '<version> required for command: npub publish <version>'
       process.exit(2)
     return npub.publish(directory, option, config)
 

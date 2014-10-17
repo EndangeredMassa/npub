@@ -1,8 +1,6 @@
-git = require './git'
-
-module.exports = (dir, callback) ->
-  git.isClean dir, (isClean) ->
+module.exports = (git, callback) ->
+  git.isClean (isClean) ->
     if !isClean
-      callback(new Error "git status at #{dir} is not clean")
+      callback(new Error "git status at #{git.dir} is not clean")
     callback()
 
