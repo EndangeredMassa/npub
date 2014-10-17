@@ -28,15 +28,15 @@ debug = (message) ->
 module.exports = (dir, version, config) ->
   git = Git(dir)
   npm = Npm(dir)
-  changelog = Changelog(dir)
+  changelog = Changelog(dir, git)
 
-  ensureCleanStage dir, (error) ->
+  ensureCleanStage git, (error) ->
     endIf(error)
 
     license(dir, config)
     debug 'ensured license headers'
 
-    ensureCleanStage dir, (error) ->
+    ensureCleanStage git, (error) ->
       endIf(error)
 
       npm.test (error) ->
@@ -61,7 +61,7 @@ module.exports = (dir, version, config) ->
             updateVersion(dir, version)
             debug "updated version"
 
-            commitChanges dir, version, ->
+            commitChanges git, version, ->
               debug 'changes committed'
 
               tag = "v#{version}"

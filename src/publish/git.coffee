@@ -3,12 +3,14 @@
 module.exports = (dir) ->
   options = { cwd: dir }
 
+  dir: dir
+
   isClean: (callback) ->
     exec 'git diff --exit-code', options, (error, stdout, stderror) ->
       callback(!error)
 
   commit: (message, callback) ->
-    exec "git add --all ; git commit -m '#{message}'", options, (error, stdout, stderror) ->
+    exec "git add CHANGELOG.md package.json && git commit -m '#{message}'", options, (error, stdout, stderror) ->
       callback(!error)
 
   diffSinceLastTag: (callback) ->
@@ -20,7 +22,7 @@ module.exports = (dir) ->
       callback(error)
 
   branch: (callback) ->
-    exec "git rev-parse --abbrev-ref HEAD", options, (err, stdout, stderr) ->
+    exec "git rev-parse --abbrev-ref HEAD", options, (error, stdout, stderr) ->
       callback(error, stdout)
 
   push: (branch, callback) ->

@@ -1,12 +1,11 @@
-git = require './git'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 touch = require 'touch'
 
-module.exports = (dir) ->
+module.exports = (dir, git) ->
   build: (callback) ->
     # TODO: switch to PR messages and links
-    git.diffSinceLastTag dir, callback
+    git.diffSinceLastTag callback
 
   write: (changelog, filePath='/tmp/npub/changelog.md') ->
     # TODO: use library to create temp file
@@ -20,5 +19,5 @@ module.exports = (dir) ->
     newChangelog = fs.readFileSync filePath
     currentChangelog = fs.readFileSync changelogPath
     newChangelog += currentChangelog
-    @write dir, newChangelog, changelogPath
+    @write newChangelog, changelogPath
 
