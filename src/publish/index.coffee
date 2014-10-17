@@ -1,4 +1,7 @@
 fs = require 'fs'
+debug = require('debug') 'publish'
+
+log = require '../log'
 license = require './license'
 ensureCleanStage = require './clean-stage'
 Changelog = require './changelog'
@@ -13,19 +16,17 @@ endIf = (exitCodeOrError, message) ->
   return unless exitCodeOrError?
 
   if exitCodeOrError instanceof Error
-    console.error "[npub] " + exitCodeOrError.message
+    log.error exitCodeOrError.message
     process.exit(1)
   else
     return if exitCodeOrError == 0
     message ?= "exited with #{exitCodeOrError}"
-    console.error "[npub] " + message
+    log.error message
     process.exit(exitCodeOrError)
 
-debug = (message) ->
-  # TODO: pull in node-debug?
-  # console.log '!%!%', message
-
 module.exports = (dir, version, config) ->
+  debug "start"
+
   git = Git(dir)
   npm = Npm(dir)
   changelog = Changelog(dir, git)
@@ -40,9 +41,8 @@ module.exports = (dir, version, config) ->
       endIf(error)
 
       npm.test (error) ->
-        endIf(error)
-
         debug 'ran: npm test'
+        endIf(error)
 
         changelog.build (error, tempChangelog) ->
           endIf(error)
@@ -94,7 +94,7 @@ module.exports = (dir, version, config) ->
 
                           debug "published"
 
-                          console.log 'success!'
+                          log 'success!'
 
                           # TODO: github release notes
                           # TODO: github PR comments
