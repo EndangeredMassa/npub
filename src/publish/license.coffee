@@ -11,7 +11,7 @@ SOURCE_FILES = {
     endComment: '*/'
 }
 
-module.exports = addLicense = (directory, config={}) ->
+module.exports = (directory, config={}) ->
   license = readFile "#{directory}/LICENSE"
   return unless license?
 
@@ -21,8 +21,9 @@ module.exports = addLicense = (directory, config={}) ->
     ensureLicense file, license
 
 readFile = (filePath) ->
-  buffer = fs.readFileSync filePath
-  buffer.toString()
+  if (fs.existsSync filePath)
+    buffer = fs.readFileSync filePath
+    buffer.toString()
 
 getExtension = (path) ->
   path.split('.').pop()

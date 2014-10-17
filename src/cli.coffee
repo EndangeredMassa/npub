@@ -1,15 +1,13 @@
 npub = require './index'
 
 cli = (command, option, directory, config) ->
-  if command == 'prep'
-    if !option?
-      console.log '<version> required for command: prep'
-      process.exit(2)
-    return npub.prep(directory, option, config)
   if command == 'publish'
-    return npub.publish(directory, config)
+    if !option?
+      console.log '<version> required for command: npub publish <version>'
+      process.exit(2)
+    return npub.publish(directory, option, config)
 
-  console.log "invalid command: #{command}"
+  console.log "invalid command: \"#{command}\""
 
 command = process.argv[2]
 option = process.argv[3]
@@ -20,8 +18,5 @@ if config?
   delete config.registry
   delete config.tag
 
-if !command?
-  console.log 'command required'
-  process.exit(1)
-
 cli(command, option, directory, config)
+
