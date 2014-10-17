@@ -1,6 +1,7 @@
 fs = require 'fs'
 glob = require 'globber'
 log = require '../log'
+debug = require('debug') 'license'
 
 SOURCE_FILES = {
   'coffee':
@@ -13,9 +14,11 @@ SOURCE_FILES = {
 
 module.exports = (directory, config={}) ->
   license = readFile "#{directory}/LICENSE"
+  debug "has license: #{license}"
   return unless license?
 
   files = getSourceFiles(directory, config.exclude)
+  debug "files: #{files}"
 
   for file in files
     ensureLicense file, license
