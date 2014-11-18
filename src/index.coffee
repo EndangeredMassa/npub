@@ -1,4 +1,5 @@
+prep = require './prep'
 publish = require './publish'
 
-module.exports = {publish}
+module.exports = {prep, publish}
 

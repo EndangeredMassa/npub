@@ -2,7 +2,7 @@ fs = require 'fs'
 debug = require('debug') 'publish'
 
 log = require '../log'
-license = require './license'
+prep = require '../prep'
 ensureCleanStage = require './clean-stage'
 Changelog = require './changelog'
 openEditor = require './editor'
@@ -34,7 +34,7 @@ module.exports = (dir, version, config) ->
   ensureCleanStage git, (error) ->
     endIf(error)
 
-    license(dir, config)
+    prep(dir, config)
     debug 'ensured license headers'
 
     ensureCleanStage git, (error) ->
