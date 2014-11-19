@@ -1,13 +1,18 @@
 npub = require './index'
 
 cli = (command, option, directory, config) ->
-  if command == 'publish'
-    if !option?
-      console.log '<version> required for command: npub publish <version>'
-      process.exit(2)
-    return npub.publish(directory, option, config)
+  switch command
+    when 'prep'
+      return npub.prep(directory, config)
 
-  console.log "invalid command: \"#{command}\""
+    when 'publish'
+      if !option?
+        console.log '<version> required for command: npub publish <version>'
+        process.exit(2)
+      return npub.publish(directory, option, config)
+
+    else
+      console.log "invalid command: \"#{command}\""
 
 command = process.argv[2]
 option = process.argv[3]

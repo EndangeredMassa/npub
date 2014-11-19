@@ -10,12 +10,20 @@ of a project's package.json.
 It is currently not fit for external use.
 Please wait for 1.0.0 before relying on this tool.
 
+## prep command
+
+`npub prep`
+
+1. if no LICENSE file exists in the current directory, abort
+1. get a list of all .js/.coffee files recursively in the current directory, excluding those in `publishConfig.license.exclude` (and `./node_modules`)
+1. for each file, ensure the LICENSE content is in a header comment
+
 ## publish command
 
 `npub version 1.2.3`
 
 1. if git status is dirty, abort
-1. ensure license headers, if requested
+1. Runs `npub prep`
 1. if git status is dirty, abort
 1. run the npm test suite
 1. build temp changelog based on commits since last version bump
