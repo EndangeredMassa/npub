@@ -15,7 +15,7 @@ Please wait for 1.0.0 before relying on this tool.
 `npub prep`
 
 1. if no LICENSE file exists in the current directory, abort
-1. get a list of all files recursively in the current directory, excluding those in `publishConfig.license.exclude` (and `./node_modules`)
+1. get a list of all .js/.coffee files recursively in the current directory, excluding those in `publishConfig.license.exclude` (and `./node_modules`)
 1. for each file, ensure the LICENSE content is in a header comment
 
 ## publish command
