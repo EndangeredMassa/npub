@@ -3,13 +3,13 @@ debug = require('debug') 'publish'
 
 log = require '../log'
 prep = require '../prep'
-ensureCleanStage = require './clean-stage'
+verify = require '../verify'
 Changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
 commitChanges = require './commit-changes'
 Npm = require './npm'
-Git = require './git'
+Git = require '../git'
 prompt = require './prompt'
 
 endIf = (exitCodeOrError, message) ->
@@ -31,13 +31,13 @@ module.exports = (dir, version, config) ->
   npm = Npm(dir)
   changelog = Changelog(dir, git)
 
-  ensureCleanStage git, (error) ->
+  verify dir, (error) ->
     endIf(error)
 
     prep(dir, config)
     debug 'ensured license headers'
 
-    ensureCleanStage git, (error) ->
+    verify dir, (error) ->
       endIf(error)
 
       npm.test (error) ->
