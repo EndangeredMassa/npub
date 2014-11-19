@@ -13,7 +13,7 @@ cli = (command, option, directory, config) ->
 
     when 'verify'
       npub.verify directory, (err) ->
-        process.exit(3) if err
+        process.exit(2) if err
 
     else
       console.log "invalid command: \"#{command}\""

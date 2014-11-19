@@ -22,9 +22,9 @@ Please wait for 1.0.0 before relying on this tool.
 
 `npub version 1.2.3`
 
-1. if git status is dirty, abort
+1. Runs `npub verify`
 1. Runs `npub prep`
-1. if git status is dirty, abort
+1. Runs `npub verify`
 1. run the npm test suite
 1. build temp changelog based on commits since last version bump
 1. open editor with temp changelog
@@ -37,6 +37,12 @@ Please wait for 1.0.0 before relying on this tool.
 1. git push
 1. git push --tags
 1. npm publish
+
+# verify command
+
+`npub verify`
+
+1. if git status is clean exit with 0, otherwise exit with a status of 2
 
 ## todo
 
