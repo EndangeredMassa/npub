@@ -10,6 +10,7 @@ updateVersion = require './version'
 commitChanges = require './commit-changes'
 Npm = require './npm'
 Git = require '../git'
+Test = require './test'
 prompt = require './prompt'
 
 endIf = (exitCodeOrError, message) ->
@@ -24,11 +25,12 @@ endIf = (exitCodeOrError, message) ->
     log.error message
     process.exit(exitCodeOrError)
 
-module.exports = (dir, version, config) ->
+module.exports = (dir, version, testCommand, config) ->
   debug "start"
 
   git = Git(dir)
   npm = Npm(dir)
+  test = Test(dir, npm)
   changelog = Changelog(dir, git)
 
   verify dir, (error) ->
@@ -40,8 +42,7 @@ module.exports = (dir, version, config) ->
     verify dir, (error) ->
       endIf(error)
 
-      npm.test (error) ->
-        debug 'ran: npm test'
+      test testCommand, (error) ->
         endIf(error)
 
         changelog.build (error, tempChangelog) ->
