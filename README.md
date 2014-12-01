@@ -22,10 +22,13 @@ Please wait for 1.0.0 before relying on this tool.
 
 `npub version 1.2.3`
 
+Options:
+* `-t/--test command` - alternate test suite command. default: `npm test`
+
 1. Runs `npub verify`
 1. Runs `npub prep`
 1. Runs `npub verify`
-1. run the npm test suite
+1. run the test suite
 1. build temp changelog based on commits since last version bump
 1. open editor with temp changelog
 1. if exit code is non-zero, abort

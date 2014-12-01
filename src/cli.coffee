@@ -9,7 +9,7 @@ cli = (argv, directory, config) ->
       return npub.prep(directory, config)
 
     when 'publish'
-      version = argv.v || argv._[1]
+      version = argv._[1]
 
       if !version?
         console.log '<version> required for command: npub publish <version>'
