@@ -3,11 +3,29 @@ mkdirp = require 'mkdirp'
 touch = require 'touch'
 debug = require('debug') 'changelog'
 
+repeat = (pattern, count) ->
+  arr = (pattern for idx in [1..count])
+  arr.join('')
+
 module.exports = (dir, git) ->
-  build: (callback) ->
+  changelogPath = "#{dir}/CHANGELOG.md"
+
+  build: (version, callback) ->
     # TODO: switch to PR messages and links
     debug "build"
-    git.diffSinceLastTag callback
+    currentChangelog = fs.readFileSync changelogPath
+    git.diffSinceLastTag (err, commits) ->
+      return callback(err, commits) if err?
+
+      completeDiff = [
+        version,
+        repeat("-", version.length),
+        commits,
+        currentChangelog
+      ].join "\n"
+
+      debug "prepend addition"
+      callback null, completeDiff
 
   write: (changelog, filePath='/tmp/npub/changelog.md') ->
     # TODO: use library to create temp file
@@ -17,11 +35,7 @@ module.exports = (dir, git) ->
     filePath
 
   update: (filePath) ->
-    changelogPath = "#{dir}/CHANGELOG.md"
+    debug "update from #{filePath}"
     touch.sync changelogPath
     newChangelog = fs.readFileSync filePath
-    currentChangelog = fs.readFileSync changelogPath
-    newChangelog += currentChangelog
-    debug "prepend addition"
     @write newChangelog, changelogPath
-

@@ -45,7 +45,7 @@ module.exports = (dir, version, testCommand, config) ->
       test testCommand, (error) ->
         endIf(error)
 
-        changelog.build (error, tempChangelog) ->
+        changelog.build version, (error, tempChangelog) ->
           endIf(error)
 
           tempChangelogPath = changelog.write(tempChangelog)
