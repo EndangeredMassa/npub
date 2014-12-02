@@ -4,13 +4,8 @@ touch = require 'touch'
 debug = require('debug') 'changelog'
 
 repeat = (pattern, count) ->
-  str = ""
-
-  while count > 0
-    str += pattern
-    count--
-
-  str
+  arr = (pattern for idx in [1..count])
+  arr.join('')
 
 module.exports = (dir, git) ->
   changelogPath = "#{dir}/CHANGELOG.md"
