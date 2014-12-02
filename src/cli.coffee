@@ -1,15 +1,22 @@
 npub = require './index'
+minimist = require 'minimist'
 
-cli = (command, option, directory, config) ->
+cli = (argv, directory, config) ->
+  command = argv._[0]
+
   switch command
     when 'prep'
       return npub.prep(directory, config)
 
     when 'publish'
-      if !option?
+      version = argv._[1]
+
+      if !version?
         console.log '<version> required for command: npub publish <version>'
         process.exit(2)
-      return npub.publish(directory, option, config)
+
+      testCommand = argv.t || argv.test
+      return npub.publish(directory, version, testCommand, config)
 
     when 'verify'
       npub.verify directory, (err) ->
@@ -18,8 +25,7 @@ cli = (command, option, directory, config) ->
     else
       console.log "invalid command: \"#{command}\""
 
-command = process.argv[2]
-option = process.argv[3]
+argv = minimist process.argv.slice(2)
 directory = process.cwd()
 
 config = require("#{directory}/package.json").publishConfig
@@ -27,5 +33,5 @@ if config?
   delete config.registry
   delete config.tag
 
-cli(command, option, directory, config)
+cli(argv, directory, config)
 

@@ -11,8 +11,11 @@ module.exports = (dir) ->
     exec "npm test", options, (error, stdout, stderr) ->
       console.log(stdout) if stdout?
       console.error(stderr) if stderr?
+
       if error?
         callback(new Error "tests failed with exit code: #{error.code}")
+        return
+
       callback()
 
   publish: (callback) ->
@@ -23,5 +26,6 @@ module.exports = (dir) ->
       console.error(stderr) if stderr?
       if error?
         callback(new Error "tests failed with exit code: #{error.code}")
-      callback()
+        return
 
+      callback()
