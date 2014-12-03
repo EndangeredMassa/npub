@@ -52,7 +52,7 @@ module.exports = (directory, log, config={}) ->
   debug "files: #{files}"
 
   for file in files
-    ensureLicense file, license
+    ensureLicense file, license, log
 
 readFile = (filePath) ->
   if (fs.existsSync filePath)
@@ -78,7 +78,7 @@ getSourceFiles = (directory, exclude=[]) ->
   files.filter (file) ->
     file.ext in (Object.keys SOURCE_FILES)
 
-ensureLicense = (file, license) ->
+ensureLicense = (file, license, log) ->
   file.content = readFile file.path
 
   newline = '\n'
