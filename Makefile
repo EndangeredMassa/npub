@@ -28,13 +28,6 @@ $(DISTDIR)/bundle.js: $(LIB)
 
 .PHONY: test loc clean
 
-release-patch:
-	$(BINDIR)/npub publish patch
-release-minor:
-	$(BINDIR)/npub publish minor
-release-major:
-	$(BINDIR)/npub publish major
-
 test:
 	$(MOCHA) $(TEST)
 $(TESTDIR)/%.coffee: phony-dep
