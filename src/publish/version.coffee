@@ -6,5 +6,5 @@ module.exports = (dir, version) ->
   packageJson = require filePath
   debug "updating #{packageJson.version} to #{version}"
   packageJson.version = version
-  fs.writeFileSync filePath, JSON.stringify(packageJson, null, 2)
+  fs.writeFileSync filePath, JSON.stringify(packageJson, null, 2) + "\n"
 
