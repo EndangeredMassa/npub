@@ -16,8 +16,7 @@
   },
   "devDependencies": {
     "coffee-script-redux": "2.0.0-beta7",
-    "mocha": "~1.12.1",
-    "semver": "~2.1.0"
+    "mocha": "~1.12.1"
   },
   "scripts": {
     "test": "make test"

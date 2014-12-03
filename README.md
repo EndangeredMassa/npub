@@ -20,10 +20,11 @@ Please wait for 1.0.0 before relying on this tool.
 
 ## publish command
 
-`npub version 1.2.3`
+`npub version <version>`
 
 Options:
 * `-t/--test command` - alternate test suite command. default: `npm test`
+* `<version>` - `1.2.3` or for auto increments: `patch`, `minor`, `major`
 
 1. Runs `npub verify`
 1. Runs `npub prep`

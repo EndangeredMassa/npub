@@ -1,20 +1,37 @@
 npub = require './index'
 minimist = require 'minimist'
+semver = require 'semver'
 
-cli = (argv, directory, config) ->
+clone = (obj) ->
+  JSON.parse(JSON.stringify(obj || {}))
+
+publishVersion = (str, currentVersion) ->
+  if !str?
+    log.error '<version> required for command: npub publish <version>'
+    process.exit(2)
+
+  version = switch str
+    when "patch", "minor", "major"
+      semver.inc(currentVersion, str)
+    else
+      semver.valid(str)
+
+  if !version
+    log.error "'#{version}' is invalid."
+    process.exit(2)
+
+  return version
+
+cli = (argv, directory, packageJson) ->
   command = argv._[0]
+  config = clone(packageJson.publishConfig)
 
   switch command
     when 'prep'
       return npub.prep(directory, config)
 
     when 'publish'
-      version = argv._[1]
-
-      if !version?
-        console.log '<version> required for command: npub publish <version>'
-        process.exit(2)
-
+      version = publishVersion(argv._[1], packageJson.version)
       testCommand = argv.t || argv.test
       return npub.publish(directory, version, testCommand, config)
 
@@ -28,10 +45,6 @@ cli = (argv, directory, config) ->
 argv = minimist process.argv.slice(2)
 directory = process.cwd()
 
-config = require("#{directory}/package.json").publishConfig
-if config?
-  delete config.registry
-  delete config.tag
-
-cli(argv, directory, config)
+packageJson = require("#{directory}/package.json")
+cli(argv, directory, packageJson)
 
