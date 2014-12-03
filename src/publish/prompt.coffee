@@ -45,8 +45,9 @@ module.exports = (version, callback) ->
 
     prompt.close()
 
-    if answer == 'n'
-      return callback(new Error 'user aborted publish')
+    unless /y|Y/.test answer
+      callback(new Error 'user aborted publish')
+      return
 
     callback()
 

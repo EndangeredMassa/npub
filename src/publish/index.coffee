@@ -33,7 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 debug = require('debug') 'publish'
 
-log = require '../log'
 prep = require '../prep'
 verify = require '../verify'
 Changelog = require './changelog'
@@ -57,12 +56,12 @@ endIf = (exitCodeOrError, message) ->
     log.error message
     process.exit(exitCodeOrError)
 
-module.exports = (dir, version, testCommand, config) ->
+module.exports = (dir, log, config, version, testCommand) ->
   debug "start"
 
   git = Git(dir)
-  npm = Npm(dir)
-  test = Test(dir, npm)
+  npm = Npm(dir, log)
+  test = Test(dir, log, npm)
   changelog = Changelog(dir, git)
 
   verify dir, (error) ->
@@ -95,6 +94,7 @@ module.exports = (dir, version, testCommand, config) ->
             debug "updated version"
 
             commitChanges git, version, ->
+              endIf(error)
               debug 'changes committed'
 
               tag = "v#{version}"

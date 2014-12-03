@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 {exec} = require 'child_process'
 debug = require("debug") "npm"
 
-module.exports = (dir) ->
+module.exports = (dir, log) ->
   debug "initialized for: #{dir}"
   options = { dir }
 
@@ -41,8 +41,8 @@ module.exports = (dir) ->
     debug "test"
 
     exec "npm test", options, (error, stdout, stderr) ->
-      console.log(stdout) if stdout?
-      console.error(stderr) if stderr?
+      log(stdout) if stdout?
+      log.error(stderr) if stderr?
 
       if error?
         callback(new Error "tests failed with exit code: #{error.code}")
@@ -54,8 +54,8 @@ module.exports = (dir) ->
     debug "publish"
 
     exec "npm publish", options, (error, stdout, stderr) ->
-      console.log(stdout) if stdout?
-      console.error(stderr) if stderr?
+      log(stdout) if stdout?
+      log.error(stderr) if stderr?
       if error?
         callback(new Error "tests failed with exit code: #{error.code}")
         return

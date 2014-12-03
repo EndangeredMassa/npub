@@ -30,6 +30,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ###
 
+log = require './log'
 npub = require './index'
 minimist = require 'minimist'
 semver = require 'semver'
@@ -60,19 +61,19 @@ cli = (argv, directory, packageJson) ->
 
   switch command
     when 'prep'
-      return npub.prep(directory, config)
+      return npub.prep(directory, log, config)
 
     when 'publish'
       version = publishVersion(argv._[1], packageJson.version)
       testCommand = argv.t || argv.test
-      return npub.publish(directory, version, testCommand, config)
+      return npub.publish(directory, log, config, version, testCommand)
 
     when 'verify'
       npub.verify directory, (err) ->
         process.exit(2) if err
 
     else
-      console.log "invalid command: \"#{command}\""
+      log.error "invalid command: \"#{command}\""
 
 argv = minimist process.argv.slice(2)
 directory = process.cwd()

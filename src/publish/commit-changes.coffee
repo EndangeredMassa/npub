@@ -39,7 +39,8 @@ module.exports = (git, version, callback) ->
     debug "status: #{success}"
 
     if !success
-      console.error '[npub] failed to commit changes'
-      process.exit(1)
+      callback(new Error "failed to commit changes")
+      return
+
     callback()
 

@@ -32,7 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 fs = require 'fs'
 glob = require 'globber'
-log = require './log'
 debug = require('debug') 'license'
 
 SOURCE_FILES = {
@@ -44,7 +43,7 @@ SOURCE_FILES = {
     endComment: '*/'
 }
 
-module.exports = (directory, config={}) ->
+module.exports = (directory, log, config={}) ->
   license = readFile "#{directory}/LICENSE"
   debug "has license: #{license}"
   return unless license?
