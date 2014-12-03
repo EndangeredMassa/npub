@@ -44,9 +44,7 @@ Git = require '../git'
 test = require './test'
 prompt = require './prompt'
 
-module.exports = (dir, log, config, version, testCommand) ->
-  debug "start"
-
+EndIf = (log) ->
   endIf = (exitCodeOrError, message) ->
     return unless exitCodeOrError?
 
@@ -59,6 +57,10 @@ module.exports = (dir, log, config, version, testCommand) ->
       log.error message
       process.exit(exitCodeOrError)
 
+module.exports = (dir, log, config, version, testCommand) ->
+  debug "start"
+
+  endIf = EndIf(log)
   git = Git(dir)
   npm = Npm(dir, log)
   changelog = Changelog(dir, git)
