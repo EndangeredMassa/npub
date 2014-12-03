@@ -2,6 +2,9 @@ npub = require './index'
 minimist = require 'minimist'
 semver = require 'semver'
 
+clone = (obj) ->
+  JSON.parse(JSON.stringify(obj || {}))
+
 publishVersion = (str, currentVersion) ->
   if !str?
     log.error '<version> required for command: npub publish <version>'
@@ -14,14 +17,14 @@ publishVersion = (str, currentVersion) ->
       semver.valid(str)
 
   if !version
-    log.error '"#{version}" is invalid.'
+    log.error "'#{version}' is invalid."
     process.exit(2)
 
   return version
 
 cli = (argv, directory, packageJson) ->
   command = argv._[0]
-  config = JSON.parse(JSON.stringify(packageJson.publishConfig || {}))
+  config = clone(packageJson.publishConfig)
 
   switch command
     when 'prep'
