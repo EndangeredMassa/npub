@@ -32,10 +32,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 debug = require('debug') 'commit-changes'
 
-module.exports = (git, version, callback) ->
-  debug "v#{version}"
+module.exports = (git, tag, callback) ->
+  debug tag
 
-  git.commit "v#{version}", (success) ->
+  git.commit tag, (success) ->
     debug "status: #{success}"
 
     if !success

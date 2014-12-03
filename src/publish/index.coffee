@@ -41,46 +41,44 @@ updateVersion = require './version'
 commitChanges = require './commit-changes'
 Npm = require './npm'
 Git = require '../git'
-Test = require './test'
+test = require './test'
 prompt = require './prompt'
-
-endIf = (exitCodeOrError, message) ->
-  return unless exitCodeOrError?
-
-  if exitCodeOrError instanceof Error
-    log.error exitCodeOrError.message
-    process.exit(1)
-  else
-    return if exitCodeOrError == 0
-    message ?= "exited with #{exitCodeOrError}"
-    log.error message
-    process.exit(exitCodeOrError)
 
 module.exports = (dir, log, config, version, testCommand) ->
   debug "start"
 
+  endIf = (exitCodeOrError, message) ->
+    return unless exitCodeOrError?
+
+    if exitCodeOrError instanceof Error
+      log.error exitCodeOrError.message
+      process.exit(1)
+    else
+      return if exitCodeOrError == 0
+      message ?= "exited with #{exitCodeOrError}"
+      log.error message
+      process.exit(exitCodeOrError)
+
   git = Git(dir)
   npm = Npm(dir, log)
-  test = Test(dir, log, npm)
   changelog = Changelog(dir, git)
 
   verify dir, (error) ->
     endIf(error)
 
-    prep(dir, config)
+    prep(dir, log, config)
     debug 'ensured license headers'
 
     verify dir, (error) ->
       endIf(error)
 
-      test testCommand, (error) ->
+      test dir, log, npm, testCommand, (error) ->
         endIf(error)
 
         changelog.build version, (error, tempChangelog) ->
           endIf(error)
 
           tempChangelogPath = changelog.write(tempChangelog)
-          debug "temp changelog at: #{tempChangelogPath}"
 
           openEditor tempChangelogPath, (error) ->
             if error?
@@ -88,21 +86,15 @@ module.exports = (dir, log, config, version, testCommand) ->
               endIf(error)
 
             changelog.update(tempChangelogPath)
-            debug "updated changelog"
 
             updateVersion(dir, version)
-            debug "updated version"
 
-            commitChanges git, version, ->
+            tag = "v#{version}"
+            commitChanges git, tag, (error) ->
               endIf(error)
-              debug 'changes committed'
-
-              tag = "v#{version}"
 
               git.tag tag, (error) ->
                 endIf(error)
-
-                debug "tagged: #{tag}"
 
                 prompt version, (error) ->
                   endIf(error)
@@ -110,22 +102,14 @@ module.exports = (dir, log, config, version, testCommand) ->
                   git.branch (error, branch) ->
                     endIf(error)
 
-                    debug "git branch: #{branch}"
-
                     git.push branch, (error) ->
                       endIf(error)
-
-                      debug "git pushed"
 
                       git.pushTag tag, (error) ->
                         endIf(error)
 
-                        debug "git tag \"#{tag}\" pushed"
-
                         npm.publish (error) ->
                           endIf(error)
-
-                          debug "published"
 
                           log 'success!'
 
