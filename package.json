@@ -4,6 +4,11 @@
   "description": "publishing tool for your node projects hosted on github",
   "main": "lib/index.js",
   "bin": "./bin/npub",
+  "publishConfig": {
+    "license": {
+      "exclude": "/"
+    }
+  },
   "dependencies": {
     "debug": "^2.1.0",
     "editor": "^0.1.0",
