@@ -2,12 +2,22 @@ npub = require './index'
 minimist = require 'minimist'
 semver = require 'semver'
 
-publishVersion = (str, version) ->
-  switch str
+publishVersion = (str, currentVersion) ->
+  if !str?
+    log.error '<version> required for command: npub publish <version>'
+    process.exit(2)
+
+  version = switch str
     when "patch", "minor", "major"
-      semver.inc(version, str)
+      semver.inc(currentVersion, str)
     else
       semver.valid(str)
+
+  if !version
+    log.error '"#{version}" is invalid.'
+    process.exit(2)
+
+  return version
 
 cli = (argv, directory, packageJson) ->
   command = argv._[0]
@@ -19,11 +29,6 @@ cli = (argv, directory, packageJson) ->
 
     when 'publish'
       version = publishVersion(argv._[1], packageJson.version)
-
-      if !version?
-        console.log '<version> required for command: npub publish <version>'
-        process.exit(2)
-
       testCommand = argv.t || argv.test
       return npub.publish(directory, version, testCommand, config)
 
