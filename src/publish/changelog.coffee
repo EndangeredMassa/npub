@@ -45,6 +45,7 @@ module.exports = (dir, git) ->
   build: (version, callback) ->
     # TODO: switch to PR messages and links
     debug "build"
+    touch.sync changelogPath
     currentChangelog = fs.readFileSync changelogPath
     git.diffSinceLastTag (err, commits) ->
       return callback(err, commits) if err?
