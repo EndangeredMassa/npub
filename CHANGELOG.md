@@ -1,3 +1,7 @@
+0.5.1
+-----
+- safely handle not having a CHANGELOG.md
+
 0.5.0
 -----
 - internal cleanup of debug lines
