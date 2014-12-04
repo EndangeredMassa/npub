@@ -42,12 +42,11 @@ module.exports = (version, callback) ->
 
   prompt.question "Publish #{version}? (Y/n) ", (answer) ->
     debug "status: #{answer}"
-
     prompt.close()
 
-    unless /y|Y/.test answer
-      callback(new Error 'user aborted publish')
-      return
+    # blank answer is the default 'Y'
+    if !answer || /y|Y/.test answer
+      return callback()
 
-    callback()
+    callback(new Error 'user aborted publish')
 
