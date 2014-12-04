@@ -5,9 +5,7 @@
   "main": "lib/index.js",
   "bin": "./bin/npub",
   "publishConfig": {
-    "license": {
-      "exclude": "/"
-    }
+    "license": {}
   },
   "dependencies": {
     "debug": "^2.1.0",

@@ -41,5 +41,7 @@ module.exports = (filePath, callback) ->
 
     if exitCode != 0
       callback(new Error "editor exited editor with #{exitCode}; aborting")
+      return
+
     callback()
 

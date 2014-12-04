@@ -32,7 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 fs = require 'fs'
 glob = require 'globber'
-log = require './log'
 debug = require('debug') 'license'
 
 SOURCE_FILES = {
@@ -44,7 +43,7 @@ SOURCE_FILES = {
     endComment: '*/'
 }
 
-module.exports = (directory, config={}) ->
+module.exports = (directory, log, config={}) ->
   license = readFile "#{directory}/LICENSE"
   debug "has license: #{license}"
   return unless license?
@@ -53,7 +52,7 @@ module.exports = (directory, config={}) ->
   debug "files: #{files}"
 
   for file in files
-    ensureLicense file, license
+    ensureLicense file, license, log
 
 readFile = (filePath) ->
   if (fs.existsSync filePath)
@@ -79,7 +78,7 @@ getSourceFiles = (directory, exclude=[]) ->
   files.filter (file) ->
     file.ext in (Object.keys SOURCE_FILES)
 
-ensureLicense = (file, license) ->
+ensureLicense = (file, license, log) ->
   file.content = readFile file.path
 
   newline = '\n'
