@@ -43,12 +43,12 @@ SOURCE_FILES = {
     endComment: '*/'
 }
 
-module.exports = (directory, log, config={}) ->
+module.exports = (directory, log, config) ->
   license = readFile "#{directory}/LICENSE"
   debug "has license: #{license}"
   return unless license?
 
-  files = getSourceFiles(directory, config.license?.exclude)
+  files = getSourceFiles(directory, config.publishConfig?.license)
   debug "files: #{files}"
 
   for file in files
@@ -62,13 +62,17 @@ readFile = (filePath) ->
 getExtension = (path) ->
   path.split('.').pop()
 
-getSourceFiles = (directory, exclude=[]) ->
+getSourceFiles = (directory, licenseConfig) ->
+  include = licenseConfig.include || []
+  exclude = licenseConfig.exclude || []
+
   options =
     exclude: ['node_modules'].concat(exclude)
     recursive: true
     includeDirectories: false
 
-  files = glob.sync directory, options
+  searchPaths = if include.length then include else directory
+  files = glob.sync searchPaths, options
   files = files.map (file) ->
     {
       path: file

@@ -33,8 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 debug = require('debug') 'publish'
 
-prep = require '../prep'
-verify = require '../verify'
 Changelog = require './changelog'
 openEditor = require './editor'
 updateVersion = require './version'
@@ -43,6 +41,7 @@ Npm = require './npm'
 Git = require '../git'
 test = require './test'
 prompt = require './prompt'
+npub = require './index'
 
 EndIf = (log) ->
   endIf = (exitCodeOrError, message) ->
@@ -57,21 +56,22 @@ EndIf = (log) ->
       log.error message
       process.exit(exitCodeOrError)
 
-module.exports = (dir, log, config, version, testCommand) ->
+module.exports = (dir, log, config, testCommand) ->
   debug "start"
+  {version} = config
 
   endIf = EndIf(log)
   git = Git(dir)
   npm = Npm(dir, log)
   changelog = Changelog(dir, git)
 
-  verify dir, (error) ->
+  npub.verify dir, (error) ->
     endIf(error)
 
-    prep(dir, log, config)
+    npub.prep(dir, log, config)
     debug 'ensured license headers'
 
-    verify dir, (error) ->
+    npub.verify dir, (error) ->
       endIf(error)
 
       test dir, log, npm, testCommand, (error) ->
@@ -98,7 +98,7 @@ module.exports = (dir, log, config, version, testCommand) ->
               git.tag tag, (error) ->
                 endIf(error)
 
-                prompt version, (error) ->
+                prompt tag, (error) ->
                   endIf(error)
 
                   git.branch (error, branch) ->
