@@ -20,7 +20,7 @@ Please wait for 1.0.0 before relying on this tool.
 
 ## publish command
 
-`npub version <version>`
+`npub publish <version>`
 
 Options:
 * `-t/--test command` - alternate test suite command. default: `npm test`
@@ -42,7 +42,7 @@ Options:
 1. git push --tags
 1. npm publish
 
-# verify command
+## verify command
 
 `npub verify`
 
