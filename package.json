@@ -4,6 +4,10 @@
   "description": "publishing tool for your node projects hosted on github",
   "main": "lib/index.js",
   "bin": "./bin/npub",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/endangeredmassa/npub"
+  },
   "publishConfig": {
     "license": {}
   },
