@@ -11,6 +11,7 @@ Npm = require './npm'
 Git = require '../git'
 test = require './test'
 prompt = require './prompt'
+isPrivate = require './public'
 
 EndIf = (log) ->
   endIf = (exitCodeOrError, message) ->
@@ -32,6 +33,10 @@ module.exports = (dir, log, config, version, testCommand) ->
   git = Git(dir)
   npm = Npm(dir, log)
   changelog = Changelog(dir, git)
+
+  if isPrivate(dir)
+    console.log 'Cannot publish this package because it is private.'
+    process.exit(2)
 
   verify dir, (error) ->
     endIf(error)
