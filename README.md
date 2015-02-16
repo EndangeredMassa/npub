@@ -4,11 +4,8 @@ This is a publishing tool
 for Node.js projects
 hosted in a git repository.
 
-It makes use of the existing `publishConfig` section
+It makes use of the `publishConfig` section
 of a project's package.json.
-
-It is currently not fit for external use.
-Please wait for 1.0.0 before relying on this tool.
 
 ## prep command
 
