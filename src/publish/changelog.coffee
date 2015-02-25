@@ -28,12 +28,10 @@ module.exports = (dir, git) ->
       debug "prepend addition"
       callback null, completeDiff
 
-  write: (changelog, filePath='/tmp/npub/changelog.md') ->
-    # TODO: use library to create temp file
+  write: (changelog, filePath) ->
     mkdirp.sync '/tmp/npub'
     fs.writeFileSync filePath, changelog, {flag: 'w'}
     debug "wrote #{filePath}"
-    filePath
 
   update: (filePath) ->
     debug "update from #{filePath}"

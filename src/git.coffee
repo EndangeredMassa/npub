@@ -13,6 +13,11 @@ module.exports = (dir) ->
     exec 'git diff --exit-code', options, (error, stdout, stderror) ->
       callback(!error)
 
+  getSha: (callback) ->
+    debug 'getSha'
+    exec 'git rev-parse HEAD', options, (error, stdout, stderror) ->
+      callback(error, stdout?.trim())
+
   commit: (message, callback) ->
     debug "commit - #{message}"
 
