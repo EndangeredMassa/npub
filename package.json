@@ -21,10 +21,10 @@
     "touch": "0.0.3"
   },
   "devDependencies": {
-    "coffee-script-redux": "2.0.0-beta7",
-    "mocha": "~1.12.1"
+    "coffee-script": "^1.9.1"
   },
   "scripts": {
-    "test": "echo 'write some tests'"
+    "build": "coffee -cbo lib src",
+    "test": "echo 'no tests!' ; exit 1"
   }
 }
