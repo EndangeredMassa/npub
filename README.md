@@ -34,7 +34,6 @@ Options:
 1. commit changes (changelog and package.json update) with message "v1.2.3"
 1. tag commit as v1.2.3
 1. confirm "about to publish", otherwise abort
-1. npm publish
 1. git push
 1. git push --tags
 1. npm publish
