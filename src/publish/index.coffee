@@ -47,48 +47,51 @@ module.exports = (dir, log, config, version, testCommand) ->
     verify dir, (error) ->
       endIf(error)
 
-      test dir, log, npm, testCommand, (error) ->
+      npm.install config.registry, (error) ->
         endIf(error)
 
-        changelog.build version, (error, tempChangelog) ->
+        test dir, log, npm, testCommand, (error) ->
           endIf(error)
 
-          git.getSha (error, sha) ->
+          changelog.build version, (error, tempChangelog) ->
             endIf(error)
 
-            tempChangelogPath = "/tmp/npub/changelog-#{sha}.md"
-            changelog.write(tempChangelog, tempChangelogPath)
+            git.getSha (error, sha) ->
+              endIf(error)
 
-            openEditor tempChangelogPath, (error) ->
-              if error?
-                fs.unlinkSync tempChangelogPath
-                endIf(error)
+              tempChangelogPath = "/tmp/npub/changelog-#{sha}.md"
+              changelog.write(tempChangelog, tempChangelogPath)
 
-              changelog.update(tempChangelogPath)
-
-              updateVersion(dir, version)
-
-              tag = "v#{version}"
-              commitChanges git, tag, (error) ->
-                endIf(error)
-
-                git.tag tag, (error) ->
+              openEditor tempChangelogPath, (error) ->
+                if error?
+                  fs.unlinkSync tempChangelogPath
                   endIf(error)
 
-                  prompt version, (error) ->
+                changelog.update(tempChangelogPath)
+
+                updateVersion(dir, version)
+
+                tag = "v#{version}"
+                commitChanges git, tag, (error) ->
+                  endIf(error)
+
+                  git.tag tag, (error) ->
                     endIf(error)
 
-                    git.push branch, (error) ->
+                    prompt version, (error) ->
                       endIf(error)
 
-                      git.pushTag tag, (error) ->
+                      git.push branch, (error) ->
                         endIf(error)
 
-                        npm.publish (error) ->
+                        git.pushTag tag, (error) ->
                           endIf(error)
 
-                          log 'success!'
+                          npm.publish (error) ->
+                            endIf(error)
 
-                          # TODO: github release notes
-                          # TODO: github PR comments
+                            log 'success!'
+
+                            # TODO: github release notes
+                            # TODO: github PR comments
 
