@@ -54,33 +54,40 @@ module.exports = (dir, log, config, version, testCommand) ->
     (tempChangelog, sha, done) ->
       tempChangelogPath = "/tmp/npub/changelog-#{sha}.md"
       changelog.write(tempChangelog, tempChangelogPath)
-      done(null, tempChangeLog)
+      done(null, tempChangelogPath)
 
     (tempChangelogPath, done) ->
       openEditor tempChangelogPath, (error) ->
         if error?
           fs.unlinkSync tempChangelogPath
+          return done(error)
+
         changelog.update(tempChangelogPath)
         updateVersion(dir, version)
-        done(error)
+        done()
 
     (done) ->
       tag = "v#{version}"
-      commitChanges git, tag, done
+      commitChanges git, tag, (error) ->
+        done(error, tag)
 
-    (done) ->
-      git.tag tag, done
+    (tag, done) ->
+      git.tag tag, (error) ->
+        done(error, tag)
 
-    (done) ->
-      prompt version, done
+    (tag, done) ->
+      prompt version, (error) ->
+        done(error, tag)
 
-    (done) ->
-      git.branch(done)
+    (tag, done) ->
+      git.branch (error, branch) ->
+        done(error, branch, tag)
 
-    (branch, done) ->
-      git.push branch, done
+    (branch, tag, done) ->
+      git.push branch, (error) ->
+        done(error, tag)
 
-    (done) ->
+    (tag, done) ->
       git.pushTag tag, done
 
     (done) ->
