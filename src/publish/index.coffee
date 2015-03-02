@@ -35,7 +35,7 @@ module.exports = (dir, log, config, version, testCommand) ->
   changelog = Changelog(dir, git)
 
   if isPrivate(dir)
-    console.log 'Cannot publish this package because it is private.'
+    log 'cannot publish this package because it is private.'
     process.exit(2)
 
   verify dir, (error) ->
