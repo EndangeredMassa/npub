@@ -81,17 +81,20 @@ module.exports = (dir, log, config, version, testCommand) ->
                     prompt version, (error) ->
                       endIf(error)
 
-                      git.push branch, (error) ->
+                      git.branch (error, branch) ->
                         endIf(error)
 
-                        git.pushTag tag, (error) ->
+                        git.push branch, (error) ->
                           endIf(error)
 
-                          npm.publish (error) ->
+                          git.pushTag tag, (error) ->
                             endIf(error)
 
-                            log 'success!'
+                            npm.publish (error) ->
+                              endIf(error)
 
-                            # TODO: github release notes
-                            # TODO: github PR comments
+                              log 'success!'
+
+                              # TODO: github release notes
+                              # TODO: github PR comments
 
