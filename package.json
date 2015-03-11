@@ -1,6 +1,6 @@
 {
   "name": "npub",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "publishing tool for your node projects hosted on github",
   "main": "lib/index.js",
   "bin": "./bin/npub",
