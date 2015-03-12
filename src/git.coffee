@@ -10,8 +10,8 @@ module.exports = (dir) ->
   isClean: (callback) ->
     debug "isClean"
 
-    exec 'git diff --exit-code', options, (error, stdout, stderror) ->
-      callback(!error)
+    exec 'git status --untracked-files=all --porcelain', options, (error, stdout, stderror) ->
+      callback(stdout.length == 0, stdout?.trim())
 
   getSha: (callback) ->
     debug 'getSha'
