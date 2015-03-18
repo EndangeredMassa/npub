@@ -1,4 +1,5 @@
 fs = require 'fs'
+async = require 'async'
 debug = require('debug') 'publish'
 
 prep = require '../prep'
@@ -13,88 +14,89 @@ test = require './test'
 prompt = require './prompt'
 isPrivate = require './public'
 
-EndIf = (log) ->
-  endIf = (exitCodeOrError, message) ->
-    return unless exitCodeOrError?
-
-    if exitCodeOrError instanceof Error
-      log.error exitCodeOrError.message
-      process.exit(1)
-    else
-      return if exitCodeOrError == 0
-      message ?= "exited with #{exitCodeOrError}"
-      log.error message
-      process.exit(exitCodeOrError)
 
 module.exports = (dir, log, config, version, testCommand) ->
   debug "start"
 
-  endIf = EndIf(log)
   git = Git(dir)
   npm = Npm(dir, log)
   changelog = Changelog(dir, git)
 
   if isPrivate(dir)
-    console.log 'Cannot publish this package because it is private.'
+    log 'cannot publish this package because it is private.'
     process.exit(2)
 
-  verify dir, (error) ->
-    endIf(error)
+  async.waterfall [
+    (done) ->
+      verify dir, done
 
-    prep(dir, log, config)
-    debug 'ensured license headers'
+    (done) ->
+      prep(dir, log, config)
+      debug 'ensured license headers'
+      done()
 
-    verify dir, (error) ->
-      endIf(error)
+    (done) ->
+      verify dir, done
 
-      npm.install config.registry, (error) ->
-        endIf(error)
+    (done) ->
+      npm.install config.registry, done
 
-        test dir, log, npm, testCommand, (error) ->
-          endIf(error)
+    (done) ->
+      test dir, log, npm, testCommand, done
 
-          changelog.build version, (error, tempChangelog) ->
-            endIf(error)
+    (done) ->
+      changelog.build version, done
 
-            git.getSha (error, sha) ->
-              endIf(error)
+    (tempChangelog, done) ->
+      git.getSha (error, sha) ->
+        done(error, tempChangelog, sha)
 
-              tempChangelogPath = "/tmp/npub/changelog-#{sha}.md"
-              changelog.write(tempChangelog, tempChangelogPath)
+    (tempChangelog, sha, done) ->
+      tempChangelogPath = "/tmp/npub/changelog-#{sha}.md"
+      changelog.write(tempChangelog, tempChangelogPath)
+      done(null, tempChangelogPath)
 
-              openEditor tempChangelogPath, (error) ->
-                if error?
-                  fs.unlinkSync tempChangelogPath
-                  endIf(error)
+    (tempChangelogPath, done) ->
+      openEditor tempChangelogPath, (error) ->
+        if error?
+          fs.unlinkSync tempChangelogPath
+          return done(error)
 
-                changelog.update(tempChangelogPath)
+        changelog.update(tempChangelogPath)
+        updateVersion(dir, version)
+        done()
 
-                updateVersion(dir, version)
+    (done) ->
+      tag = "v#{version}"
+      commitChanges git, tag, (error) ->
+        done(error, tag)
 
-                tag = "v#{version}"
-                commitChanges git, tag, (error) ->
-                  endIf(error)
+    (tag, done) ->
+      git.tag tag, (error) ->
+        done(error, tag)
 
-                  git.tag tag, (error) ->
-                    endIf(error)
+    (tag, done) ->
+      prompt version, (error) ->
+        done(error, tag)
 
-                    prompt version, (error) ->
-                      endIf(error)
+    (tag, done) ->
+      git.branch (error, branch) ->
+        done(error, branch, tag)
 
-                      git.branch (error, branch) ->
-                        endIf(error)
+    (branch, tag, done) ->
+      git.push branch, (error) ->
+        done(error, tag)
 
-                        git.push branch, (error) ->
-                          endIf(error)
+    (tag, done) ->
+      git.pushTag tag, done
 
-                          git.pushTag tag, (error) ->
-                            endIf(error)
+    (done) ->
+      npm.publish done
 
-                            npm.publish (error) ->
-                              endIf(error)
+  ], (error) ->
+    if error?
+      log.error error.message
+      process.exit(1)
 
-                              log 'success!'
-
-                              # TODO: github release notes
-                              # TODO: github PR comments
+    log 'success!'
 

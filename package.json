@@ -12,6 +12,7 @@
     "license": {}
   },
   "dependencies": {
+    "async": "^0.9.0",
     "debug": "^2.1.0",
     "editor": "^0.1.0",
     "globber": "~0.1.2",
