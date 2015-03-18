@@ -22,6 +22,7 @@ module.exports = (dir, log) ->
 
   install: (registry, callback) ->
     debug "install"
+    log 'installing node modules...'
 
     rimraf path.join(dir, 'node_modules'), (error) ->
       return callback(error) if error?

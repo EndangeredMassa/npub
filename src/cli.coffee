@@ -24,6 +24,11 @@ publishVersion = (str, currentVersion) ->
   return version
 
 cli = (argv, directory, packageJson) ->
+  if argv.v or argv.version
+    npubPackageJson = require '../package.json'
+    log npubPackageJson.version
+    return process.exit(0)
+
   command = argv._[0]
   config = clone(packageJson.publishConfig)
 
