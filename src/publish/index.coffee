@@ -80,15 +80,16 @@ module.exports = (dir, log, config, version, testCommand) ->
         done(error, tag)
 
     (tag, done) ->
-      git.branch (error, branch) ->
-        done(error, branch, tag)
+      git.remoteBranch (error, remoteBranch) ->
+        [remote, branch] = remoteBranch?.split('/')
+        done(error, remote, branch, tag)
 
-    (branch, tag, done) ->
-      git.push branch, (error) ->
-        done(error, tag)
+    (remote, branch, tag, done) ->
+      git.push remote, branch, (error) ->
+        done(error, remote, tag)
 
-    (tag, done) ->
-      git.pushTag tag, done
+    (remote, tag, done) ->
+      git.pushTag remote, tag, done
 
     (done) ->
       npm.publish done
