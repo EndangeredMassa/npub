@@ -36,21 +36,21 @@ module.exports = (dir) ->
     exec "git tag -a #{tag} -m #{tag}", options, (error, stdout, stderror) ->
       callback(error)
 
-  branch: (callback) ->
-    debug "branch"
+  remoteBranch: (callback) ->
+    debug "remoteBranch"
 
-    exec "git rev-parse --abbrev-ref HEAD", options, (error, stdout, stderr) ->
+    exec "git rev-parse --abbrev-ref --symbolic-full-name @{u}", options, (error, stdout, stderr) ->
       callback(error, stdout)
 
-  push: (branch, callback) ->
-    debug "push - #{branch}"
+  push: (remote, branch, callback) ->
+    debug "push - #{remote} #{branch}"
 
-    exec "git push origin #{branch}", options, (error, stdout, stderror) ->
+    exec "git push #{remote} #{branch}", options, (error, stdout, stderror) ->
       callback(error)
 
-  pushTag: (tag, callback) ->
-    debug "pushTag - #{tag}"
+  pushTag: (remote, tag, callback) ->
+    debug "pushTag - #{remote} #{tag}"
 
-    exec "git push origin tag #{tag}", options, (error, stdout, stderror) ->
+    exec "git push #{remote} tag #{tag}", options, (error, stdout, stderror) ->
       callback(error)
 
