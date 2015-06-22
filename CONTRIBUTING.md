@@ -6,7 +6,7 @@ creating issues or pull requests.
 
 ## Code of Conduct
 
-The [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+The [Code of Conduct](CODE_OF_CONDUCT.md)
 will be enforced in all project spaces.
 Please read it
 so that you know what kind of behavior

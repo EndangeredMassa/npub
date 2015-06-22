@@ -6,7 +6,7 @@ hosted in a git repository.
 
 This project is a safe and inclusive place
 for contributors of all kinds.
-See the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+See the [Code of Conduct](CODE_OF_CONDUCT.md)
 for details.
 
 
