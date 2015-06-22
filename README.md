@@ -4,11 +4,16 @@ This is a publishing tool
 for Node.js projects
 hosted in a git repository.
 
-It makes use of the `publishConfig` section
-of a project's `package.json`.
+This project is a safe and inclusive place
+for contributors of all kinds.
+See the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+for details.
 
 
 ## `publishConfig`
+
+It makes use of the `publishConfig` section
+of a project's `package.json`.
 
 In your project's `package.json`,
 you can optionally include a `publishConfig` section.
