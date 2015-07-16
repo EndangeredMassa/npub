@@ -67,6 +67,8 @@ Options:
 1. Runs `npub verify`
 1. Runs `npub prep`
 1. Runs `npub verify`
+1. Removes `node_modules` & runs `npm install` using `publishConfig.registry`
+   if available
 1. run the test suite
 1. build temp changelog based on commits since last version bump
 1. open editor with temp changelog
